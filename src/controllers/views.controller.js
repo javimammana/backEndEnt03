@@ -2,7 +2,7 @@ import { productServices } from "../services/services.js";
 import { cartServices } from "../services/services.js";
 import { chatServices } from "../services/services.js";
 
-import configObject from "../config/configEnv.js";
+// import configObject from "../config/configEnv.js";
 
 class ViewController {
 
@@ -30,6 +30,7 @@ class ViewController {
                 return res.redirect("/login");
             }
             const user = req.user
+            console.log(user);
             const limit = req.query.limit || 10;
             const filtro = req.query.query ? {category: req.query.query} : {};
             const sort = req.query.sort ? {price: Number(req.query.sort)} : {};
@@ -118,12 +119,15 @@ class ViewController {
                 ...cart,
                 products: cartTotal
             }
+            
+            const totalFinal = cartRender.products.reduce((acumulador, elemento) => acumulador + Number(elemento.totalPrice), 0).toFixed(2);
     
             res.render("cart", {
                 title: "Carrito",
                 fileCss: "style.css",
                 cart,
                 cartRender,
+                totalFinal,
                 user
             });
 
@@ -135,9 +139,6 @@ class ViewController {
 
     async viewRealTimeProducts (req, res) {
         try {
-            if (req.user.role != "ADMIN") {
-                return res.status(403).send("Sin permiso para esta area");
-            }
             const user = req.user
     
             res.render("realTimeProducts", {
@@ -194,7 +195,7 @@ class ViewController {
     viewProfile (req, res) {
         try {
             const user = req.user
-            console.log(user)
+            // console.log(user)
             res.render("profile", {
                 title: `Perfil de ${req.user.first_name}`,
                 fileCss: "style.css",
@@ -202,6 +203,19 @@ class ViewController {
             })
         } catch (error) {
             res.status(500).json({error: "Error del servidor al Renderizar Profile"});
+        }
+    }
+
+    viewRestricted (req, res) {
+        try {
+            const user = req.user
+            res.render("noAccess", {
+                title: `Acceso Denegado!`,
+                fileCss: "style.css",
+                user
+            })
+        } catch (error) {
+            res.status(500).json({error: "Error del servidor al Renderizar Restricted"});
         }
     }
 }

@@ -1,4 +1,4 @@
-<div class="contenedor">
+
 {{#if elementos}}
     <div class="sticky">
         <h1>Productos</h1>
@@ -18,10 +18,20 @@
             </a>
             <p>{{ this.description }}</p>
             <div class="cardInfo">
+                {{#if this.stock}}
                 <p>Stock: {{ this.stock }}</p>
                 <h5>${{ this.price }} .-</h5>
+                {{else}}
+                <p>Sin Stock</p>
+                {{/if}}
             </div>
-            <button class="btn">Comprar</button>
+            {{#if this.stock}}
+                <form action="/api/carts/{{../user.cart}}/product/{{this._id}}" method="POST">
+                    <button class="btn" type="submit">Comprar</button>
+                </form>
+            {{else}}
+                <button class="btn">Notificarme de Stock</button>
+            {{/if}}
         </div>
         {{/each}}
     </div>
@@ -57,7 +67,8 @@
             </div>
         {{/if}}
     </div>
-</div>
+
+
 
 
 

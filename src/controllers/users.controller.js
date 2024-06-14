@@ -28,7 +28,7 @@ class UserController {
         }, "coderhouse", {expiresIn: "5m"});
     
         res.cookie("coderCookieToken", token, {
-            maxAge: 90000,
+            maxAge: 180000,
             httpOnly: true
         });
     
@@ -67,10 +67,10 @@ class UserController {
                 cart: user.cart,
                 favorite: user.favorite,
                 chatid: user.chatid
-            }, "coderhouse", {expiresIn: "5m"});
+            }, "coderhouse", {expiresIn: "20m"});
 
             res.cookie("coderCookieToken", token, {
-                maxAge: 90000,
+                maxAge: 180000,
                 httpOnly: true
             });
 
@@ -103,7 +103,7 @@ class UserController {
                 cart: user.cart,
                 favorite: user.favorite,
                 chatid: user.chatid
-            }, "coderhouse", {expiresIn: "5m"});
+            }, "coderhouse", {expiresIn: "20m"});
     
             res.cookie("coderCookieToken", token, {
                 maxAge: 90000,

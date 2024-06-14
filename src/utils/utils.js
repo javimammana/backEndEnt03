@@ -57,13 +57,14 @@ export function adminLoginJWT (req, res, next) {
                 // age: usuario.age,
                 email: admin.email,
                 role: "ADMIN",
+                admin: true,
                 // cart: usuario.cart,
                 // favorite: usuario.favorite,
                 chatid: "ADMIN"
-            }, "coderhouse", {expiresIn: "5m"});
+            }, "coderhouse", {expiresIn: "20m"});
     
             res.cookie("coderCookieToken", token, {
-                maxAge: 90000,
+                maxAge: 180000,
                 httpOnly: true
             });
 
@@ -78,10 +79,13 @@ export function adminLoginJWT (req, res, next) {
     next();
 }
 
-// export function capitalize(text) {
-//     const firstLetter = text.charAt(0);
-//     const rest = text.slice(1);
-//     return firstLetter.toUpperCase() + rest;
-// }
+const checkRole = (roles) => async (req, res, next) => {
+    const user = req.user;
+    if (![].concat(roles).includes(user.role)) {
+        // return res.status(403).send("Sin permiso para esta area").render();
+        return res.redirect("/restricted");
+    }
+    next()
+}
 
-// export default validate;
+export {checkRole};

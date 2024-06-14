@@ -1,4 +1,4 @@
-import { cartServices } from "../services/services.js";
+import { cartServices, ticketServices } from "../services/services.js";
 import { productServices } from "../services/services.js";
 
 class CartController {
@@ -44,7 +44,7 @@ class CartController {
                 cart.products.push({product: pid, quantity: 1})
             }
             await cartServices.updateCart(cart._id, cart);
-            res.json(cart);
+            res.redirect("/products");
         } catch (error) {
             res.status(500).json({error: error.message});
         }
@@ -130,6 +130,7 @@ class CartController {
             await cartServices.updateCart(cid, cart);
             res.json(cart);
         } catch (error) {
+            console.log(error)
             res.status(500).json({error: error.message});
         }
     }
@@ -167,6 +168,38 @@ class CartController {
         } catch (error) {
             res.status(500).json({error: error.message});
         }
+    }
+
+    async checkOut (req, res) {
+        const { cid } = req.params;
+        const user = req.user;
+        let cart = await cartServices.getCartById(cid);
+
+        const sinStock = [];
+        const enStock = [];
+
+        for (let prod of cart.products) {
+            prod.quantity < prod.product.stock ? enStock.push({...prod, price: prod.product.price}) : sinStock.push(prod);
+        }
+
+        const ticket = {
+            userId: user._id,
+            purchaser: user.email,
+            products: enStock,
+            amount: enStock.reduce((acumulador, elemento) => acumulador + Number(elemento.price * elemento.quantity),0).toFixed(2),
+            code: `ECMRS-`
+        }
+
+        const buy = await ticketServices.createTicket(ticket);
+
+        console.log (buy),
+
+        cart = {
+            ...cart,
+            products: sinStock
+        }
+        // const timepo = new Date("<YYYY-mm-ddTHH:MM:ss>");
+        res.send(buy)
     }
 }
 

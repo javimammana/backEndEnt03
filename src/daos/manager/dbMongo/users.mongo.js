@@ -11,6 +11,15 @@ class UserDao {
         }
     }
 
+    async getUserById(id) {
+        try {
+            const user = await UserModel.findById(id);
+            return user;
+        } catch (error) {
+            throw new Error ("(DAO) Error al buscar Usuario");
+        }
+    }
+
     async getUserByEmail(mail) {
         try {
             const user = await UserModel.findOne(mail);

@@ -27,3 +27,4 @@ function pass2() {
         flag2 = true;
     }
 }
+

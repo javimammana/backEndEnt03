@@ -1,14 +1,10 @@
 import passport from "passport";
-import local from "passport-local";
 import GitHubStrategy from "passport-github2";
 import jwt from "passport-jwt";
+import { userServices } from "../services/services.js";
 
-import UserModel from "../models/user.model.js";
-import { createHash, isValidPassword } from "../utils/hashbcrypt.js";
-import { CartManager } from "../manager/CartManager.js";
+import { cartServices } from "../services/services.js";
 
-const LocalStrategy = local.Strategy;
-const cartManager = new CartManager();
 const JWTStrategy = jwt.Strategy;
 const ExtractJWT = jwt.ExtractJwt;
 
@@ -26,65 +22,6 @@ const initializePassport = () => {
         }
     }))
 
-    // passport.use("register", new LocalStrategy({
-    //     passReqToCallback: true,
-    //     usernameField: "email"
-    // }, async (req, username, password, done) => {
-    //     const {first_name, last_name, email, age} = req.body;
-
-    //     try {
-    //         let user = await UserModel.findOne({email: email});
-
-    //         if (user) {
-    //             return done(null, false);
-    //         }
-
-    //         let cart = await cartManager.addCart();
-
-    //         let userNvo = {
-    //             first_name,
-    //             last_name,
-    //             email,
-    //             age,
-    //             password: createHash(password),
-    //             cart: cart._id,
-    //             login: "local",
-    //             chatid: ""
-    //         }
-
-    //         let result = await UserModel.create(userNvo);
-
-    //         return done(null, result);
-
-    //     } catch (error) {
-    //         return done(error);
-    //     }
-    // }))
-
-    // passport.use ("login", new LocalStrategy({
-    //     usernameField: "email"
-    // }, async (email, password, done) => {
-
-    //     try {
-            
-    //         let usuario = await UserModel.findOne({email: email});
-
-    //         if (!usuario) {
-    //             console.log ("Usuario no existe");
-    //             return done(null, false);
-    //         }
-
-    //         if (!isValidPassword(password, usuario)) {
-    //             return done(null, false);
-    //         }
-
-    //         return done(null,usuario);
-
-    //     } catch (error) {
-    //         return done(error);
-    //     }
-    // }))
-
     // login con GITHUB
 
     passport.serializeUser((user, done) => {
@@ -92,7 +29,7 @@ const initializePassport = () => {
     })
 
     passport.deserializeUser(async(id, done) => {
-        let user = await UserModel.findById({_id: id});
+        let user = await userServices.getUserById(id);
         done(null, user);
     })
 
@@ -103,11 +40,10 @@ const initializePassport = () => {
     }, async (accessToken, refreshToken, profile, done) => {
 
         try {
-            
-            let usuario = await UserModel.findOne({email: profile._json.email})
+            let usuario = await userServices.getUserByEmail({email:profile._json.email})
 
             if (!usuario) {
-                let cart = await cartManager.addCart();
+                let cart = await cartServices.createCart();
                 let userNvo = {
                     first_name: profile._json.name,
                     last_name: "",
@@ -119,7 +55,7 @@ const initializePassport = () => {
                     chatid: ""
                 }
 
-                let result = await UserModel.create(userNvo);
+                let result = await userServices.createUser(userNvo);
                 done(null, result)
             } else {
                 done (null, usuario);

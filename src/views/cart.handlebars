@@ -1,10 +1,10 @@
-<div class="contenedor">
+
     {{#if cart.products}}
         <div class="sticky">
             <h1>Productos en Carrito</h1>
             <div class="line"></div>
         </div>
-        <div class="contenedorCard">
+        <div class="contenedorCart">
             {{#each cartRender.products}}
                 <div class="itemCart">
                     <div class="itemCartInfo">
@@ -31,14 +31,22 @@
                         </div>
                     </div>
                     <div class="deleteOfCart">
-                        <button class="btn btnDel">Borrar</button>
+                        <button class="btn btnDel" onclick="eliminarProducto('{{../user.cart}}', '{{this.product._id}}')">Borrar</button>
                     </div>
                 </div>
             {{/each}}
+
+        <div class="totalPrice"><p>Total por el Carrito ${{totalFinal}} .-</p></div>
+        <div class="btnCart">
+            <form action="/api/carts/{{user.cart}}/purchase" method="POST">
+                <button class="btn btnPay" type="submit">Pagar</button>
+            </form>
         </div>
-        <div class="deleteCart">
-            <button class="btn btnDel">Vaciar Carrito</button>
+        <div class="btnCart">
+            <button class="btn btnDel" onclick="vaciarCarrito('{{user.cart}}')">Vaciar Carrito</button>
         </div>
+        </div>
+
 
     {{else}}
         <div class="sticky">
@@ -47,4 +55,34 @@
         </div>
     {{/if}}
 
-</div>
+<script>
+    function eliminarProducto(cartId, productId) {
+        fetch(`/api/carts/${cartId}/product/${productId}`, {
+            method: 'DELETE'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al eliminar el producto del carrito');
+                }
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function vaciarCarrito(cartId) {
+        fetch(`/api/carts/${cartId}`, {
+            method: 'DELETE'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al vaciar el carrito');
+                }
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>

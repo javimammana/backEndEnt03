@@ -10,6 +10,15 @@
 </head>
 <body>
     {{>header}}
-    {{{body}}}
+    <div class="contenedor">
+        {{#if user.admin}}
+        <div>
+            <div>{{>headerAdmin}}</div>
+            <div>{{{body}}}</div>
+        </div>
+        {{else}}
+        {{{body}}}
+        {{/if}}
+    </div>
 </body>
 </html>

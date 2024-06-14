@@ -1,15 +1,34 @@
-import UserDao from "../daos/dbManager/users.dao.js";
+import UserDao from "../daos/manager/dbMongo/users.mongo.js";
 
 const userDao = new UserDao();
+
+function DTO (user) {
+    const {password, ...rest} = user;
+
+    // console.log(`usuario DTO: ${rest._doc}`)
+    return rest._doc;
+}
 
 class UserRepository {
 
     async createUser (data) {
         try {
             const user = await userDao.crateUser(data);
-            return user;
+            const usuario = DTO(user);
+            return usuario;
         } catch (error) {
             console.log ("(REPOSITORY) Error al crear Usuario");
+            return false;
+        }
+    }
+
+    async getUserById (id) {
+        try {
+            const user = await userDao.getUserById(id);
+            const usuario = DTO(user);
+            return usuario;
+        } catch (error) {
+            console.log ("(REPOSITORY) Error al buscar Usuario");
             return false;
         }
     }
@@ -17,7 +36,8 @@ class UserRepository {
     async getUserByEmail (mail) {
         try {
             const user = await userDao.getUserByEmail(mail);
-            return user;
+            const usuario = DTO(user);
+            return usuario;
         } catch (error) {
             console.log ("(REPOSITORY) Error al buscar Usuario");
             return false;

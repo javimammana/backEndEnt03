@@ -1,4 +1,4 @@
-import ChatDao from "../daos/dbManager/chats.dao.js";
+import ChatDao from "../daos/manager/dbMongo/chats.mongo.js";
 
 const chatDao = new ChatDao();
 
