@@ -24,8 +24,7 @@ class UserController {
             role: user.role,
             cart: user.cart,
             favorite: user.favorite,
-            chatid: user.chatid,
-            purchases: user.purchases
+            chatid: user.chatid
         }, "coderhouse", {expiresIn: "5m"});
     
         res.cookie("coderCookieToken", token, {
@@ -107,7 +106,7 @@ class UserController {
             }, "coderhouse", {expiresIn: "20m"});
     
             res.cookie("coderCookieToken", token, {
-                maxAge: 90000,
+                maxAge: 180000,
                 httpOnly: true
             });
     

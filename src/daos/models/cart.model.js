@@ -6,6 +6,10 @@ const cartSchema = new Schema({
         product: { type: Schema.Types.ObjectId, ref: "products" },
         quantity: { type: Number, required: true, default: 1 },
         }],
+    purchases: [{
+        purchasesId: { type: Schema.Types.ObjectId, ref: "tickets" },
+        code: { type: String, required: true, default: 1 },
+        }],
 });
 
 

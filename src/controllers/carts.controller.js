@@ -2,6 +2,7 @@ import { cartServices, ticketServices } from "../services/services.js";
 import { productServices } from "../services/services.js";
 import { userServices } from "../services/services.js";
 import nodemailer from "nodemailer";
+import jwt from "jsonwebtoken";
 
 class CartController {
 
@@ -201,9 +202,7 @@ class CartController {
             }
 
             //asiga ticket a usuario
-            const usuario = await userServices.getUserById(buy.userId);
-            usuario.purchases.unshift({ purchasesId: buy._id, code: buy.code});
-            await userServices.updateUser(buy.userId, usuario);
+            cart.purchases.unshift({ purchasesId: buy._id, code: buy.code});
 
             //Envio notificacion
             await transport.sendMail({

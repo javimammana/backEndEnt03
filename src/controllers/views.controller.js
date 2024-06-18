@@ -226,8 +226,6 @@ class ViewController {
     async viewCheckOut (req, res) {
 
         const { tid } = req.params;
-
-        console.log (tid)
         try {
             if (!req.user) {
                 return res.redirect("/login");
