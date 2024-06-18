@@ -10,6 +10,11 @@ class TicketRepository {
         const ticket = await ticketRepo.createTicket(cartBuy);
         return ticket;
     }
+
+    async getTicketById(id) {
+        const ticket = await ticketRepo.getTicket(id);
+        return ticket;
+    }
 }
 
 export default TicketRepository;

@@ -1,5 +1,7 @@
 import UserModel from "../../models/user.model.js";
 
+
+
 class UserDao {
 
     async crateUser (data) {
@@ -8,6 +10,15 @@ class UserDao {
             return user;
         } catch (error) {
             throw new Error ("(DAO) Error al crear Usuario");
+        }
+    }
+
+    async updateUser(id, data) {
+        try {
+            const user = await UserModel.findByIdAndUpdate(id, data);
+            return user;
+        } catch (error) {
+            throw new Error ("(DAO) Error al actualizar Usuario");
         }
     }
 

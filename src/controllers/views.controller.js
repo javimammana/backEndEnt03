@@ -1,6 +1,7 @@
-import { productServices } from "../services/services.js";
+import { productServices, userServices } from "../services/services.js";
 import { cartServices } from "../services/services.js";
 import { chatServices } from "../services/services.js";
+import { ticketServices } from "../services/services.js";
 
 // import configObject from "../config/configEnv.js";
 
@@ -30,7 +31,7 @@ class ViewController {
                 return res.redirect("/login");
             }
             const user = req.user
-            console.log(user);
+            // console.log(user);
             const limit = req.query.limit || 10;
             const filtro = req.query.query ? {category: req.query.query} : {};
             const sort = req.query.sort ? {price: Number(req.query.sort)} : {};
@@ -78,7 +79,7 @@ class ViewController {
     
             const {pid} = req.params;
             let product = await productServices.getProductById(pid);
-            console.log (product)
+            // console.log (product)
             if (product) {
                 product = {
                     ...product._doc,
@@ -114,19 +115,21 @@ class ViewController {
                     }
                 return totalProd
             })
-    
-            let cartRender = {
-                ...cart,
-                products: cartTotal
+
+            const sinStock = [];
+            const enStock = [];
+            for (let prod of cartTotal) {
+                prod.quantity <= prod.product.stock ? enStock.push(prod) : sinStock.push(prod);
             }
             
-            const totalFinal = cartRender.products.reduce((acumulador, elemento) => acumulador + Number(elemento.totalPrice), 0).toFixed(2);
+            const totalFinal = cartTotal.reduce((acumulador, elemento) => acumulador + Number(elemento.totalPrice), 0).toFixed(2);
     
             res.render("cart", {
                 title: "Carrito",
                 fileCss: "style.css",
                 cart,
-                cartRender,
+                sinStock,
+                enStock,
                 totalFinal,
                 user
             });
@@ -163,6 +166,7 @@ class ViewController {
                 title: "CHAT",
                 fileCss: "style.css",
                 chats,
+                user
             });
         } catch (e) {
             console.log(e);
@@ -216,6 +220,47 @@ class ViewController {
             })
         } catch (error) {
             res.status(500).json({error: "Error del servidor al Renderizar Restricted"});
+        }
+    }
+
+    async viewCheckOut (req, res) {
+
+        const { tid } = req.params;
+
+        console.log (tid)
+        try {
+            if (!req.user) {
+                return res.redirect("/login");
+            }
+            const user = req.user;
+
+            const searchBuy = await ticketServices.getTicketById(tid);
+
+            const totalProdBuy = searchBuy.products.map(inBuy => {
+                const totalProd = {
+                    ...inBuy,
+                    totalPrice: (inBuy.quantity * inBuy.price).toFixed(2),
+                    }
+                return totalProd
+            })
+
+            const buy = {
+                ...searchBuy,
+                products: totalProdBuy
+            }
+
+            let cart = await cartServices.getCartById(user.cart);
+
+            res.render("checkout", {
+                title: `Detalle de Compra`,
+                fileCss: "style.css",
+                user,
+                buy,
+                cart
+            })
+
+        } catch (error) {
+            res.status(500).json({error: "Error del servidor al Renderizar Compra" + error});
         }
     }
 }

@@ -22,6 +22,16 @@ class UserRepository {
         }
     }
 
+    async updateUser (id, data) {
+        try {
+            const user = await userDao.updateUser(id, data);
+            return user;
+        } catch (error) {
+            console.log ("(REPOSITORY) Error al actualizar Usuario");
+            return false;
+        }
+    }
+
     async getUserById (id) {
         try {
             const user = await userDao.getUserById(id);

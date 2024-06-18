@@ -52,7 +52,8 @@ const initializePassport = () => {
                     password: "",
                     login: "github",
                     cart: cart._id,
-                    chatid: ""
+                    chatid: "",
+                    purchases: profile.purchases
                 }
 
                 let result = await userServices.createUser(userNvo);

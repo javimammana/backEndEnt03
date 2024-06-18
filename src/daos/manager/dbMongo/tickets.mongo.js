@@ -37,7 +37,7 @@ class TicketDao {
 
     async getTicket (id) {
         try {
-            const ticket = await TicketModel.findById(id).populate("userId").lean();
+            const ticket = await TicketModel.findById(id).populate("products.product").lean();
             return ticket;
         } catch (error) {
             throw new Error ("(DAO) Error al consultar ticket");

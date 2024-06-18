@@ -11,7 +11,7 @@ import passport from "passport";
 import "./dataBase.js";
 import configObject from "./config/configEnv.js";
 
-
+// xnln qlld uvbj ktdc
 // import productRouter from "./routes/product.routes.js";
 import productRouter from "./routes/products.routes.js"
 import cartRouter from "./routes/carts.routes.js";
