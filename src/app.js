@@ -102,6 +102,14 @@ io.on("connection", async (socket) => {
         socket.emit("resultado", resultado); //Aplicar la respuesta para mostrar en pantalla.-
     });
 
+    socket.on("updateProduct", async (data) => {
+        console.log("update desde back")
+        console.log(data);
+        const resultado = await productController.updateProductRealTime(data);
+        socket.emit("listProduct", await productController.getProductsRealTime());
+        socket.emit("resultado", resultado); //Aplicar la respuesta para mostrar en pantalla.-
+    });
+
     //CHAT!
 
     const messages = await chatController.getAllMessages();

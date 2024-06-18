@@ -14,6 +14,8 @@ router.get ("/product/:pid", passport.authenticate("jwt", {session: false, failu
 router.get("/carts", passport.authenticate("jwt", {session: false, failureRedirect: "/login"}), checkRole(['USER']), viewController.viewCart);
 router.get("/realtimeproducts", passport.authenticate("jwt", {session: false, failureRedirect: "/login"}), checkRole(['ADMIN']), viewController.viewRealTimeProducts);
 router.get("/carts/:tid/checkout", passport.authenticate("jwt", {session: false, failureRedirect: "/login"}), checkRole(['USER']), viewController.viewCheckOut);
+router.get("/buys/:tid", passport.authenticate("jwt", {session: false, failureRedirect: "/login"}), checkRole(['USER']), viewController.viewBuys);
+
 //CHAT//
 router.get ("/messages", passport.authenticate("jwt", {session: false, failureRedirect: "/login"}), checkRole(['USER']), viewController.viewMessages);
 

@@ -359,6 +359,10 @@
 
 /* diseno RealTime */
 
+.noVisible {
+    display: none;
+}
+
 .realTime {
     display: flex;
     flex-direction: column;
@@ -470,18 +474,33 @@
     font-size: 12px;
 }
 
-.rtDelete {
-    width: 50px;
+.rtButtons {
+    width: 100px;
     display: flex;
     align-items: center;
+    flex-direction: column;
 }
 
 .rtBtn{
-    background-color: #c60808;
     border: 0px;
     padding: 5px;
     border-radius: 5px;
     color: aliceblue;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.rtBtnDelete {
+    background-color: #c60808;
+}
+
+.rtBtnCancel {
+    background-color: #1e1e1e;
+}
+
+.rtBtnUpdate {
+    background-color: #ebce0f;
+    color: #000;
 }
 
 
@@ -615,4 +634,46 @@ body.swal2-shown > [aria-hidden='true'] {
   .cheStock p {
     margin: 10px;
     border-bottom: #3c3c3c solid 1px;
+  }
+
+  /*********buys********/
+
+  .buyContenedor {
+    display: flex;
+    width: 100%;
+    max-width: 900px;
+    justify-content: center;
+    margin: 20px 0;
+  }
+
+  .buyContenedor ul {
+    background-color: #3c3c3c;
+    width: 280px;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 5px;
+  }
+
+  .buyContenedor ul li {
+    padding: 5px;
+    margin: 5px 0;
+  }
+
+  .buyContenedor ul li a {
+    color: #e1e1e1;
+  }
+
+  .buyContenedor ul li a :hover {
+    color: #ebce0f;
+  }
+
+  .buyDetail {
+    width: 100%;
+    border: #1e1e1e solid 1px;
+    border-radius: 10px;
+    margin-left: 15px;
+    margin-right: 20px;
+    padding: 25px;
   }

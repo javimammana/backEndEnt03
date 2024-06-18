@@ -54,6 +54,17 @@ class UserRepository {
         }
     }
 
+    async updateUserByEmail (mail, data) {
+        try {
+            const user = await userDao.updateuserByEmail(mail, data);
+            const usuario = DTO(user);
+            return usuario;
+        } catch (error) {
+            console.log ("(REPOSITORY) Error al buscar Usuario");
+            return false;
+        }
+    }
+
 }
 
 export default UserRepository;

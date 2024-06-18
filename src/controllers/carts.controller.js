@@ -2,7 +2,6 @@ import { cartServices, ticketServices } from "../services/services.js";
 import { productServices } from "../services/services.js";
 import { userServices } from "../services/services.js";
 import nodemailer from "nodemailer";
-import jwt from "jsonwebtoken";
 
 class CartController {
 
@@ -179,9 +178,9 @@ class CartController {
                 await productServices.updateProduct(prod.product._id, {...prod.product, stock: prod.product.stock - prod.quantity});
             }
 
+            console.log(user)
             //preparo ticket
             const ticket = {
-                userId: user._id,
                 purchaser: user.email,
                 products: enStock,
                 amount: enStock.reduce((acumulador, elemento) => acumulador + Number(elemento.price * elemento.quantity),0).toFixed(2),
@@ -201,8 +200,15 @@ class CartController {
                 return;
             }
 
+            console.log(buy);
             //asiga ticket a usuario
-            cart.purchases.unshift({ purchasesId: buy._id, code: buy.code});
+            let usuario = await userServices.getUserByEmail({email: buy.purchaser});
+            console.log(usuario)
+            usuario.purchases.unshift({ purchasesId: buy._id, code: buy.code});
+            await userServices.updateUserByEmail({email:buy.purchaser}, usuario);
+            console.log(usuario)
+            const algo = await userServices.getUserByEmail({email: buy.purchaser})
+            console.log(algo)
 
             //Envio notificacion
             await transport.sendMail({

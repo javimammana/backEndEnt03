@@ -1,7 +1,6 @@
 import { Schema, model } from "mongoose";
 
 const ticketSchema = new Schema({
-    userId: { type: Schema.Types.ObjectId, ref: "users" },
     code: {type: String, index: true, unique: true},
     purchaser_datetime: { type: Date },
     amount: { type: Number },

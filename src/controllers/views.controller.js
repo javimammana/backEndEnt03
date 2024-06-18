@@ -261,6 +261,68 @@ class ViewController {
             res.status(500).json({error: "Error del servidor al Renderizar Compra" + error});
         }
     }
+
+    async viewBuys (req, res) {
+        try {
+            if (!req.user) {
+                return res.redirect("/login");
+            }
+            const user = req.user
+            const { tid } = req.params;
+            const findUser = await userServices.getUserByEmail({email: user.email});
+
+            if (findUser.purchases.length === 0) {
+                const ticket = false;
+                const buysUser = false;
+
+                res.render("buys", {
+                    title: `Mis compras`,
+                    fileCss: "style.css",
+                    user,
+                    buysUser,
+                    ticket
+                })
+                return;
+            }
+
+        
+            const buysUser = findUser.purchases.map(buy => {
+                const buys = {
+                    purchasesId: buy.purchasesId,
+                    code: buy.code
+                }
+                return buys
+            });
+
+            let ticketSearch = tid == "tid" ? await ticketServices.getTicketById(findUser.purchases[0].purchasesId) : await ticketServices.getTicketById(tid);
+
+            const ticketTotalprice = ticketSearch.products.map(prod => {
+                const totalProd = {
+                    ...prod,
+                    totalPrice: (prod.quantity * prod.price).toFixed(2)
+                }
+                return totalProd;
+            })
+
+            const ticket = {
+                ...ticketSearch,
+                products: ticketTotalprice
+            }
+
+            console.log(ticket)
+
+            res.render("buys", {
+                title: `Mis compras`,
+                fileCss: "style.css",
+                user,
+                buysUser,
+                ticket
+            })
+        } catch (error) {
+            
+        }
+
+    }
 }
 
 export default ViewController;

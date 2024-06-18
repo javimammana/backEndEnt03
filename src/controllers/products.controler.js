@@ -113,6 +113,31 @@ class ProductController {
             throw new Error ("(CONTROLLER) Error al crear productosRealTime");
         }
     }
+
+    async updateProductRealTime (data) {
+        try {
+            let { id, stock, price } = data;
+            const product = await productServices.getProductById(id);
+
+            if (!stock) {
+                stock = product.stock
+            }
+            if (!price) {
+                price = product.price;
+            }
+            const nvoProd = {
+                ...product._doc,
+                stock: stock,
+                price: price
+            }
+
+            await productServices.updateProduct(id, nvoProd);
+            return "Producto Modificado"
+        } catch (error) {
+            console.log(error)
+            throw new Error ("(CONTROLLER) Error al actualizar productosRealTime");
+        }
+    }
 }
 
 export default ProductController;

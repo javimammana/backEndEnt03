@@ -39,6 +39,15 @@ class UserDao {
             throw new Error ("(DAO) Error al buscar Usuario");
         }
     }
+
+    async updateuserByEmail (mail, data) {
+        try {
+            const user = await UserModel.findOneAndUpdate(mail, data);
+            return user;
+        } catch (error) {
+            throw new Error ("(DAO) Error al actualizar Usuario por email");
+        }
+    }
 }
 
 export default UserDao;

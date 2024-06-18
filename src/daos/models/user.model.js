@@ -37,10 +37,10 @@ const schema = new mongoose.Schema({
 
     favorite: {type: Array, default: []},
 
-    // purchases: [{
-    //     purchasesId: { type: mongoose.Schema.Types.ObjectId, ref: "tickets" },
-    //     code: { type: String, required: true, default: 1 },
-    //     }],
+    purchases: [{
+        purchasesId: { type: mongoose.Schema.Types.ObjectId, ref: "tickets" },
+        code: { type: String, required: true, default: 1 },
+        }],
 
     chatid: {
         // type: mongoose.Schema.Types.ObjectId,
